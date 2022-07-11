@@ -15,6 +15,14 @@ protected: // 仅从序列化创建
 public:
 	Ctest2Doc* GetDocument() const;
 	short int Ad_Buf[16384];
+	int M_Pca;
+	double Samp_Freq;
+
+	double XinHao_yx();//信号有效值；
+	double XinHao_Pj();//信号平均值；
+	double XinHao_Fz();//信号峰值；
+	double XinHao_FFz();//信号峰—峰值。
+
 // 操作
 public:
 
@@ -46,6 +54,8 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnFileSave();
 	afx_msg void OnFileOpen();
+	afx_msg void OnSetPara();
+	afx_msg void OnSample();
 };
 
 #ifndef _DEBUG  // test2View.cpp 中的调试版本

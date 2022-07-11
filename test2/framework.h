@@ -11,6 +11,9 @@
 // 关闭 MFC 的一些常见且经常可放心忽略的隐藏警告消息
 #define _AFX_ALL_WARNINGS
 
+#define _CRT_SECURE_NO_DEPRECATE 
+//这行代码避免要求将fopen、fscanf 在VS中要求替换为fopen_s、fscanf_s
+
 #include <afxwin.h>         // MFC 核心组件和标准组件
 #include <afxext.h>         // MFC 扩展
 

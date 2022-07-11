@@ -13,6 +13,7 @@
 
 #include "test2Doc.h"
 #include "test2View.h"
+#include "CMydlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -33,6 +34,8 @@ BEGIN_MESSAGE_MAP(Ctest2View, CView)
 	ON_WM_TIMER()
 	ON_COMMAND(ID_FILE_SAVE, &Ctest2View::OnFileSave)
 	ON_COMMAND(ID_FILE_OPEN, &Ctest2View::OnFileOpen)
+	ON_COMMAND(ID_SET_PARA, &Ctest2View::OnSetPara)
+	ON_COMMAND(ID_Sample, &Ctest2View::OnSample)
 END_MESSAGE_MAP()
 
 // Ctest2View 构造/析构
@@ -41,6 +44,8 @@ Ctest2View::Ctest2View() noexcept
 {
 	// TODO: 在此处添加构造代码
 	AZ216_Init(0, 0);
+	M_Pca = 1; 
+	Samp_Freq = 10000.0;
 }
 
 Ctest2View::~Ctest2View()
@@ -177,12 +182,12 @@ void Ctest2View::OnStopscope()
 void Ctest2View::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	int m_pca(1), g_channels(1);
+	/*int m_pca(1), g_channels(1);
 	double sampfreq(10000);
-	AZ216(m_pca, g_channels, Ad_Buf, 1024, sampfreq, 0, 0, 0, 0, 0);
-
-	CView::OnTimer(nIDEvent);
+	AZ216(m_pca, g_channels, Ad_Buf, 1024, sampfreq, 0, 0, 0, 0, 0);*/
+	AZ216(M_Pca, 1, Ad_Buf, 1024, Samp_Freq, 0, 0, 0, 0, 0);
 	InvalidateRect(NULL);
+	CView::OnTimer(nIDEvent);
 }
 
 
@@ -208,5 +213,27 @@ void Ctest2View::OnFileOpen()
 		fread(Ad_Buf, sizeof(short int), 16384, fp);
 		fclose(fp);
 	}
+	InvalidateRect(NULL);
+}
+
+
+void Ctest2View::OnSetPara()
+{
+	// TODO: 在此添加命令处理程序代码
+	CMydlg hdlg;
+	hdlg.m_pca = M_Pca;
+	hdlg.samp_freq = Samp_Freq;
+	if (hdlg.DoModal() == IDOK) {
+		M_Pca = hdlg.m_pca;
+		Samp_Freq = hdlg.samp_freq;
+	};
+
+}
+
+
+void Ctest2View::OnSample()
+{
+	// TODO: 在此添加命令处理程序代码
+	AZ216(M_Pca, 1, Ad_Buf, 1024, Samp_Freq, 0, 0, 0, 0, 0);
 	InvalidateRect(NULL);
 }
