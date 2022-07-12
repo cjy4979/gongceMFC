@@ -17,7 +17,8 @@ public:
 	short int Ad_Buf[16384];
 	int M_Pca;
 	double Samp_Freq;
-
+	void TransAD(short* a);//AD转换；
+	void sort(short* a);//排序
 	double XinHao_yx();//信号有效值；
 	double XinHao_Pj();//信号平均值；
 	double XinHao_Fz();//信号峰值；

@@ -116,6 +116,15 @@ void Ctest2View::OnDraw(CDC* /*pDC*/)
 
 		// TODO: 在此处为本机数据添加绘制代码
 	}
+	//添加信号分析处理结果
+	double res[4];
+	res[0] = XinHao_yx();//信号有效值；
+	res[1] = XinHao_Pj();//信号平均值；
+	res[2] = XinHao_Fz();//信号峰值；
+	res[3] = XinHao_FFz();//信号峰—峰值。
+	char cc[100];
+	sprintf(cc, "有效值:%5.1f 平均值:%5.1f 峰值:%5.1f  峰-峰值:%5.1f", res[0], res[1], res[2], res[3]);
+	pDC.TextOut(100, 160, cc);
 }
 
 
@@ -165,7 +174,7 @@ Ctest2Doc* Ctest2View::GetDocument() const // 非调试版本是内联的
 void Ctest2View::OnScope()
 {
 	// TODO: 在此添加命令处理程序代码
-	MessageBox("测试添加消息处理函数测试消息框");
+	//MessageBox("测试添加消息处理函数测试消息框");
 	SetTimer(10, 100, NULL);
 }
 
@@ -236,4 +245,80 @@ void Ctest2View::OnSample()
 	// TODO: 在此添加命令处理程序代码
 	AZ216(M_Pca, 1, Ad_Buf, 1024, Samp_Freq, 0, 0, 0, 0, 0);
 	InvalidateRect(NULL);
+}
+
+
+double Ctest2View::XinHao_yx()//信号有效值；
+{
+	double ret(0.0);//ret 为计算后得到的函数值
+	double V = XinHao_Pj();
+	double ms(0.0); //mean square 均方
+	//int Len = sizeof(Ad_Buf) / sizeof(Ad_Buf[0]);
+	short* a = new short[1024];
+	TransAD(a);
+	for (int i = 0; i < 1024; i++) {
+		ms = ms + (a[i] - V) * (a[i]- V);
+	}
+	ret = sqrt(ms / 1024);
+	return ret;
+}
+double Ctest2View::XinHao_Pj()//信号平均值；
+{
+	double ret(0.0);//ret 为计算后得到的函数值
+	double sum(0.0);
+	//int Len = sizeof(Ad_Buf) / sizeof(Ad_Buf[0]);
+	short* a = new short[1024];
+	TransAD(a);
+	for (int i = 0; i <1024; i++) {
+		sum += a[i];	//AD转换	
+	}
+	ret = sum / 1024;
+	return ret;
+}
+double Ctest2View::XinHao_Fz()//信号峰值；
+{
+	double ret(0.0);//ret 为计算后得到的函数值
+	double V = XinHao_Pj();
+	//int Len = sizeof(Ad_Buf) / sizeof(Ad_Buf[0]);
+	short* a = new short[1024];
+	TransAD(a);
+	short max = 0;
+	for (int i = 1; i < 1024; i++)
+	{
+		if (fabs(a[i] - V) > fabs(a[i - 1] - V)) {
+			ret = fabs(a[i]- V);
+		}
+	}
+	return ret;
+}
+double Ctest2View::XinHao_FFz()//信号峰—峰值。
+{
+	double ret(0.0);//ret 为计算后得到的函数值
+	short* a = new short[1024];
+	TransAD(a);
+	short max = a[0];
+	short min = a[0];
+	for (int i = 0; i < 1024; i++)
+	{
+		if (a[i] > max ) {
+			max = a[i];
+		}
+		if(a[i]< min ) {
+			min = a[i];
+		}
+	}
+	ret = max - min;
+	return ret;
+}
+
+//封装AD转换
+//C++ 函数不能直接返回数组，这里采用开辟动态内存的方式
+//参考：https://blog.csdn.net/qq_60404548/article/details/124300523?ops_request_misc=&request_id=&biz_id=102&utm_term=C++%20%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E6%95%B0%E7%BB%84&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-124300523.nonecase&spm=1018.2226.3001.4187
+
+void Ctest2View::TransAD(short* a)                   //动态分配内存
+{	
+	//int Len = sizeof(Ad_Buf) / sizeof(Ad_Buf[0]);		//仅前1024通道有效
+	for (int i = 0; i <= 1024; i++) {
+		a[i] = Ad_Buf[i] * 5000 / 8192 / M_Pca;	//AD转换	
+	}
 }
