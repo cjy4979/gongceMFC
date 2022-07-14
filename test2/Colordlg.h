@@ -30,6 +30,5 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedColorcancel();
-	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedOk();
 };

@@ -30,7 +30,6 @@ void Colordlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(Colordlg, CDialog)
 
 	ON_BN_CLICKED(IDColorCANCEL, &Colordlg::OnBnClickedColorcancel)
-	ON_BN_CLICKED(IDC_BUTTON1, &Colordlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDOK , &Colordlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
@@ -82,16 +81,6 @@ void Colordlg::OnBnClickedColorcancel()
 }
 
 
-void Colordlg::OnBnClickedButton1()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	char ss[100];
-	r = Get_EditBox_Content_int(IDC_EDITR);
-	g = Get_EditBox_Content_int(IDC_EDITG);
-	b = Get_EditBox_Content_int(IDC_EDITB);
-	sprintf(ss, "r=%d g=%d b=%d", r, g, b);
-	MessageBox(ss);
-}
 
 
 void Colordlg::OnBnClickedOk()
