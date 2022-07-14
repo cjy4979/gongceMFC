@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="AZ316.h" />
     <ClInclude Include="CMydlg.h" />
+    <ClInclude Include="Colordlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
@@ -197,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMydlg.cpp" />
+    <ClCompile Include="Colordlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

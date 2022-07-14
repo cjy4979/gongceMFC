@@ -17,6 +17,9 @@ public:
 	short int Ad_Buf[16384];
 	int M_Pca;
 	double Samp_Freq;
+	int R;
+	int G;
+	int B;
 	void TransAD(short* a);//AD转换；
 	void sort(short* a);//排序
 	double XinHao_yx();//信号有效值；
@@ -57,6 +60,7 @@ public:
 	afx_msg void OnFileOpen();
 	afx_msg void OnSetPara();
 	afx_msg void OnSample();
+	afx_msg void OnSetcolor();
 };
 
 #ifndef _DEBUG  // test2View.cpp 中的调试版本

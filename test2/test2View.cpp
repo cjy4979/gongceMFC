@@ -14,6 +14,7 @@
 #include "test2Doc.h"
 #include "test2View.h"
 #include "CMydlg.h"
+#include "Colordlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -36,6 +37,7 @@ BEGIN_MESSAGE_MAP(Ctest2View, CView)
 	ON_COMMAND(ID_FILE_OPEN, &Ctest2View::OnFileOpen)
 	ON_COMMAND(ID_SET_PARA, &Ctest2View::OnSetPara)
 	ON_COMMAND(ID_Sample, &Ctest2View::OnSample)
+	ON_COMMAND(ID_SetColor, &Ctest2View::OnSetcolor)
 END_MESSAGE_MAP()
 
 // Ctest2View 构造/析构
@@ -46,6 +48,9 @@ Ctest2View::Ctest2View() noexcept
 	AZ216_Init(0, 0);
 	M_Pca = 1; 
 	Samp_Freq = 10000.0;
+	R = 255;
+	G = 0;
+	B = 0;
 }
 
 Ctest2View::~Ctest2View()
@@ -70,38 +75,14 @@ void Ctest2View::OnDraw(CDC* /*pDC*/)
 		return;
 	// TODO: 在此处为本机数据添加绘制代码
 	CClientDC pDC(this);
-	CPen  pen(PS_SOLID, 1, RGB(255, 0, 0));
+	CPen pen(PS_SOLID, 1, RGB(R, G, B));
 	///三个参数的意义分别 笔的样式(PenStyle),笔的宽度(PenWidth）和颜色
+
+	
+
 	CPen* pOldPen = pDC.SelectObject(&pen);
-	///把自己设定的笔选入设备上下文（DC）
-	///SelectObject()不仅将新pen选入，还返回原来的pen
-	///划自己想要划的直线吧
-	int StartX(10), StartY(20), EndX(100);
-	static int EndY(10);;
-	pDC.MoveTo(StartX, StartY);
-	pDC.LineTo(EndX, EndY);
-	EndY += 10; if (EndY >= 300) EndY = 10;
-	/////选回去，免得Memory leak
-	pDC.SelectObject(pOldPen);
-	//CDC::SetTextColor(RGB(byte Red,byte green,byte blue));
-	//Red---红色；green---绿色；blue---蓝色。程序代码片段如下：
-	//MFC输出
-	//CClientDC pDC(this);
-	char buffer[] = "千万里，千万里我追寻着你!";
-	pDC.TextOut(100, 100, buffer, sizeof(buffer) - 1);
-	CString str;
-	str = "可是你并不在意!";
-	pDC.SetTextColor(RGB(255, 0, 0));//设置文字颜色为红色
-	pDC.TextOut(100, 130, str);
 
-	RECT rect;
-	GetClientRect(&rect);
-	int width, height;
-	width = rect.right - rect.left;
-	height = rect.bottom - rect.top;
-	pDC.MoveTo(0, 0); pDC.LineTo(width, height);
-	pDC.MoveTo(0, height); pDC.LineTo(width, 0);
-
+	//绘制波形
 	int i;
 	RECT rect1;
 	GetClientRect(&rect1);
@@ -111,11 +92,28 @@ void Ctest2View::OnDraw(CDC* /*pDC*/)
 	double deltx = ((double)ww) / 1024.0;
 	hh /= 2;
 	pDC.MoveTo(0, hh + Ad_Buf[0] * hh / 8192);
+
 	for (i = 0; i < 1024; i++) {
 		pDC.LineTo((int)(deltx * ((double)i)), hh + Ad_Buf[i] * hh / 8192);
 
 		// TODO: 在此处为本机数据添加绘制代码
 	}
+	
+	pDC.SetTextColor(RGB(255,0,0));//设置文字颜色为红色
+
+	/////选回去，免得Memory leak
+	pDC.SelectObject(pOldPen);
+
+	//坐标轴
+	RECT rect; 
+	GetClientRect(&rect);
+	int width, height;
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
+	pDC.MoveTo(0, height / 2); pDC.LineTo(width, height / 2);
+	pDC.MoveTo(width / 2, 0); pDC.LineTo(width / 2, height);
+	
+
 	//添加信号分析处理结果
 	double res[4];
 	res[0] = XinHao_yx();//信号有效值；
@@ -124,7 +122,7 @@ void Ctest2View::OnDraw(CDC* /*pDC*/)
 	res[3] = XinHao_FFz();//信号峰—峰值。
 	char cc[100];
 	sprintf(cc, "有效值:%5.1f 平均值:%5.1f 峰值:%5.1f  峰-峰值:%5.1f", res[0], res[1], res[2], res[3]);
-	pDC.TextOut(100, 160, cc);
+	pDC.TextOut(100, 10, cc);
 }
 
 
@@ -321,4 +319,20 @@ void Ctest2View::TransAD(short* a)                   //动态分配内存
 	for (int i = 0; i <= 1024; i++) {
 		a[i] = Ad_Buf[i] * 5000 / 8192 / M_Pca;	//AD转换	
 	}
+}
+
+void Ctest2View::OnSetcolor()
+{
+	// TODO: 在此添加命令处理程序代码
+	Colordlg hdlg;
+	hdlg.DoModal();
+	hdlg.r = R;
+	hdlg.g = G;
+	hdlg.b = B;
+	if (hdlg.DoModal() == IDOK) {
+		char ss[100];
+		R = hdlg.r;
+		G = hdlg.g;
+		B = hdlg.b;
+	};
 }

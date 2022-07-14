@@ -45,6 +45,9 @@
     <ClInclude Include="CMydlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Colordlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test2.cpp">
@@ -63,6 +66,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CMydlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Colordlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
