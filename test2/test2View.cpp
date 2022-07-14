@@ -48,10 +48,12 @@ Ctest2View::Ctest2View() noexcept
 	AZ216_Init(0, 0);
 	M_Pca = 1; 
 	Samp_Freq = 10000.0;
-	R = 255;
+	R = 0;
 	G = 0;
 	B = 0;
 }
+
+
 
 Ctest2View::~Ctest2View()
 {
@@ -75,7 +77,7 @@ void Ctest2View::OnDraw(CDC* /*pDC*/)
 		return;
 	// TODO: 在此处为本机数据添加绘制代码
 	CClientDC pDC(this);
-	CPen pen(PS_SOLID, 1, RGB(R, G, B));
+	CPen pen(PS_SOLID, 1, m_clr);
 	///三个参数的意义分别 笔的样式(PenStyle),笔的宽度(PenWidth）和颜色
 
 	
@@ -324,7 +326,7 @@ void Ctest2View::TransAD(short* a)                   //动态分配内存
 void Ctest2View::OnSetcolor()
 {
 	// TODO: 在此添加命令处理程序代码
-	Colordlg hdlg;
+	/*Colordlg hdlg;
 	hdlg.DoModal();
 	hdlg.r = R;
 	hdlg.g = G;
@@ -334,5 +336,13 @@ void Ctest2View::OnSetcolor()
 		R = hdlg.r;
 		G = hdlg.g;
 		B = hdlg.b;
-	};
+	};*/
+	// TODO: 在此添加命令处理程序代码
+	CColorDialog m_setClrDlg;
+	m_setClrDlg.m_cc.Flags |= CC_FULLOPEN | CC_RGBINIT;   // CC_RGBINIT可以让上次选择的颜色作为初始颜色显示出来
+	m_setClrDlg.m_cc.rgbResult = m_clr;        //记录上次选择的颜色
+	if (IDOK == m_setClrDlg.DoModal())
+	{
+		m_clr = m_setClrDlg.m_cc.rgbResult;            // 保存用户选择的颜色
+	}
 }

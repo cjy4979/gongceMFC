@@ -61,6 +61,8 @@ public:
 	afx_msg void OnSetPara();
 	afx_msg void OnSample();
 	afx_msg void OnSetcolor();
+private:
+	COLORREF m_clr;
 };
 
 #ifndef _DEBUG  // test2View.cpp 中的调试版本

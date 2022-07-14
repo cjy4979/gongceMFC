@@ -48,6 +48,12 @@
     <ClInclude Include="Colordlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CLoginDailog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="InfoFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test2.cpp">
@@ -69,6 +75,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Colordlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CLoginDailog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="InfoFile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

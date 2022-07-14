@@ -1,5 +1,5 @@
 ﻿// Colordlg.cpp: 实现文件
-//
+//弃用
 
 #include "pch.h"
 #include "test2.h"

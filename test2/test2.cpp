@@ -8,7 +8,7 @@
 #include "afxdialogex.h"
 #include "test2.h"
 #include "MainFrm.h"
-
+#include "CLoginDailog.h"
 #include "test2Doc.h"
 #include "test2View.h"
 
@@ -69,6 +69,10 @@ BOOL Ctest2App::InitInstance()
 	// 公共控件类。
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
+
+	//创建登录窗口，并以模态形式创建
+	CLoginDailog dlg;
+	dlg.DoModal();
 
 	CWinApp::InitInstance();
 
