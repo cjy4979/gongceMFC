@@ -11,7 +11,7 @@ public:
 	CLoginDailog(CWnd* pParent = nullptr);   // 标准构造函数
 	virtual ~CLoginDailog();
 
-// 对话框数据
+	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = Dialog_Login };
 #endif

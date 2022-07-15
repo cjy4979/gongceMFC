@@ -13,7 +13,7 @@ CInfoFile::~CInfoFile()
 }
 
 //读取登陆信息
-void CInfoFile::ReadLogin(CString &name, CString &pwd)
+void CInfoFile::ReadLogin(CString& name, CString& pwd)
 {
 	ifstream ifs; //创建文件输入对象
 	ifs.open(_F_LOGIN); //打开文件

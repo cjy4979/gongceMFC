@@ -63,6 +63,8 @@ public:
 	afx_msg void OnSetcolor();
 private:
 	COLORREF m_clr;
+public:
+	afx_msg void OnImagesave();
 };
 
 #ifndef _DEBUG  // test2View.cpp 中的调试版本

@@ -45,7 +45,7 @@ Ctest2App::Ctest2App() noexcept
 
 	// TODO: 将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
 	//为 CompanyName.ProductName.SubProduct.VersionInformation
-	SetAppID(_T("test2.AppID.NoVersion"));
+	SetAppID(_T("陈集禹.工程测试技术课程设计.V1.01"));
 
 	// TODO:  在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
@@ -182,7 +182,13 @@ void Ctest2App::OnAppAbout()
 	aboutDlg.DoModal();
 }
 
-// Ctest2App 消息处理程序
 
+void Ctest2Doc::SetTitle(LPCTSTR lpszTitle)
+
+{
+
+	CDocument::SetTitle("陈集禹2019211650");
+
+}
 
 

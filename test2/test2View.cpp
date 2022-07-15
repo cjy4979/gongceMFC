@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(Ctest2View, CView)
 	ON_COMMAND(ID_SET_PARA, &Ctest2View::OnSetPara)
 	ON_COMMAND(ID_Sample, &Ctest2View::OnSample)
 	ON_COMMAND(ID_SetColor, &Ctest2View::OnSetcolor)
+	ON_COMMAND(ID_ImageSave, &Ctest2View::OnImagesave)
 END_MESSAGE_MAP()
 
 // Ctest2View 构造/析构
@@ -71,12 +72,14 @@ BOOL Ctest2View::PreCreateWindow(CREATESTRUCT& cs)
 
 void Ctest2View::OnDraw(CDC* /*pDC*/)
 {
+	HMETAFILE hmetafile;
 	Ctest2Doc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
 	// TODO: 在此处为本机数据添加绘制代码
 	CClientDC pDC(this);
+	//Cpen pen(PS_SOLID, 1, RGB(255,0,0);
 	CPen pen(PS_SOLID, 1, m_clr);
 	///三个参数的意义分别 笔的样式(PenStyle),笔的宽度(PenWidth）和颜色
 
@@ -108,6 +111,7 @@ void Ctest2View::OnDraw(CDC* /*pDC*/)
 
 	//坐标轴
 	RECT rect; 
+
 	GetClientRect(&rect);
 	int width, height;
 	width = rect.right - rect.left;
@@ -125,6 +129,8 @@ void Ctest2View::OnDraw(CDC* /*pDC*/)
 	char cc[100];
 	sprintf(cc, "有效值:%5.1f 平均值:%5.1f 峰值:%5.1f  峰-峰值:%5.1f", res[0], res[1], res[2], res[3]);
 	pDC.TextOut(100, 10, cc);
+
+
 }
 
 
@@ -191,9 +197,7 @@ void Ctest2View::OnStopscope()
 void Ctest2View::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	/*int m_pca(1), g_channels(1);
-	double sampfreq(10000);
-	AZ216(m_pca, g_channels, Ad_Buf, 1024, sampfreq, 0, 0, 0, 0, 0);*/
+	
 	AZ216(M_Pca, 1, Ad_Buf, 1024, Samp_Freq, 0, 0, 0, 0, 0);
 	InvalidateRect(NULL);
 	CView::OnTimer(nIDEvent);
@@ -345,4 +349,60 @@ void Ctest2View::OnSetcolor()
 	{
 		m_clr = m_setClrDlg.m_cc.rgbResult;            // 保存用户选择的颜色
 	}
+}
+
+
+void Ctest2View::OnImagesave()
+{
+	// TODO: 在此添加命令处理程序代码
+	Ctest2Doc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+	// TODO: 在此处为本机数据添加绘制代码
+	CClientDC dc(this);
+	CRect rect;
+	GetClientRect(&rect);  //获取画布大小
+	rect.left = 0;
+	rect.top = 0;
+	HBITMAP hbitmap = CreateCompatibleBitmap(dc, rect.right - rect.left, rect.bottom - rect.top);
+	//创建位图
+	HDC hdc = CreateCompatibleDC(dc);      //创建DC，以便将图像保存为不同的格式
+	HBITMAP hOldMap = (HBITMAP)SelectObject(hdc, hbitmap);
+	//将位图选入DC，并保存返回值 
+	BitBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, dc, 0, 0, SRCCOPY);
+	//将屏幕DC的图像复制到内存DC中
+	CImage image;
+	image.Attach(hbitmap); //将位图转化为一般图像
+	CString saveFilePath;
+	{
+		CString  strFilter = _T("位图文件(*.bmp)|*.bmp|JPEG 图像文件|*.jpg|GIF图像文件 |*.gif| PNG图像文件 |*.png|其他格式(*.*)| *.* ||");
+		CFileDialog dlg(FALSE, _T("bmp"), _T("Picture01.bmp"), NULL, strFilter);
+		if (dlg.DoModal() != IDOK)
+			return;
+		CString strFileName; //文件扩展名
+		CString strExtension;
+		strFileName = dlg.m_ofn.lpstrFile;
+		if (dlg.m_ofn.nFileExtension == 0)
+		{
+			switch (dlg.m_ofn.nFilterIndex)
+			{
+			case 1:
+				strExtension = "bmp"; break;
+			case 2:
+				strExtension = "jpg"; break;
+			case 3:
+				strExtension = "gif"; break;
+			case 4:
+				strExtension = "png"; break;
+			default:
+				break;
+			}
+			strFileName = strFileName + "." + strExtension;
+		}
+		saveFilePath = strFileName;
+	}
+	HRESULT hResult = image.Save(saveFilePath);     //保存图像
+	image.Detach();
+	SelectObject(hdc, hOldMap);
 }
